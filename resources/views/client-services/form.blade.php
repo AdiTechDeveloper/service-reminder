@@ -3,7 +3,7 @@
 @section('content')
 
 @php
-    $editing = $service->exists;
+$editing = $service->exists;
 @endphp
 
 <style>
@@ -86,13 +86,13 @@
 </div>
 
 <form method="POST"
-      action="{{ $editing ? route('client-services.update', $service) : route('client-services.store') }}"
-      class="service-form-card">
+    action="{{ $editing ? route('client-services.update', $service) : route('client-services.store') }}"
+    class="service-form-card">
 
     @csrf
 
     @if($editing)
-        @method('PUT')
+    @method('PUT')
     @endif
 
     <div class="form-section">
@@ -113,11 +113,11 @@
 
                     @foreach($clients as $c)
 
-                        <option value="{{ $c->id }}"
-                            @selected(old('client_id', $service->client_id) == $c->id)>
-                            {{ $c->name }}
-                            {{ $c->company ? '('.$c->company.')' : '' }}
-                        </option>
+                    <option value="{{ $c->id }}"
+                        @selected(old('client_id', $service->client_id) == $c->id)>
+                        {{ $c->name }}
+                        {{ $c->company ? '('.$c->company.')' : '' }}
+                    </option>
 
                     @endforeach
 
@@ -125,18 +125,18 @@
 
                 @if($clients->isEmpty())
 
-                    <div class="form-text text-danger">
-                        No clients available.
-                        <a href="{{ route('clients.create') }}">
-                            Add a client first
-                        </a>.
-                    </div>
+                <div class="form-text text-danger">
+                    No clients available.
+                    <a href="{{ route('clients.create') }}">
+                        Add a client first
+                    </a>.
+                </div>
 
                 @else
 
-                    <div class="form-help">
-                        Select the client who owns this service.
-                    </div>
+                <div class="form-help">
+                    Select the client who owns this service.
+                </div>
 
                 @endif
 
@@ -148,25 +148,35 @@
                     Service Type <span class="required-mark">*</span>
                 </label>
 
-                <select name="service_type_id" class="form-select" required>
-
-                    <option value="">
-                        -- Select Service Type --
-                    </option>
+                <div
+                    class="border rounded p-3 flex"
+                    style="max-height: 180px; overflow-y: auto;">
 
                     @foreach($types as $t)
 
-                        <option value="{{ $t->id }}"
-                            @selected(old('service_type_id', $service->service_type_id) == $t->id)>
+                    <div class="form-check mb-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="service_type_ids[]"
+                            value="{{ $t->id }}"
+                            id="service_type_{{ $t->id }}"
+                            @checked(in_array($t->id, old('service_type_ids', $selectedTypes ?? [])))
+                        >
+
+                        <label
+                            class="form-check-label"
+                            for="service_type_{{ $t->id }}">
                             {{ $t->name }}
-                        </option>
+                        </label>
+                    </div>
 
                     @endforeach
 
-                </select>
+                </div>
 
                 <div class="form-help">
-                    Select the type of service being provided.
+                    Select one or more services.
                 </div>
 
             </div>
@@ -245,7 +255,7 @@
     <div class="form-actions d-flex justify-content-between align-items-center">
 
         <a href="{{ route('client-services.index') }}"
-           class="btn btn-outline-secondary">
+            class="btn btn-outline-secondary">
             Cancel
         </a>
 
